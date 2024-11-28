@@ -46,6 +46,7 @@ func (d *DPServer) ListAndWatch(_ *pluginapi.Empty, server pluginapi.DevicePlugi
 		if err := send(); err != nil {
 			return err
 		}
+		klog.Info("device list resent")
 	}
 
 	return nil

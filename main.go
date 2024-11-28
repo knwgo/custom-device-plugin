@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"log"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -53,13 +52,13 @@ func main() {
 	for {
 		select {
 		case event := <-watcher.Events:
-			klog.Infof("watch kubelet events: %s, event name: %s, isCreate: %v", event.Op.String(), event.Name, event.Op&fsnotify.Create == fsnotify.Create)
 			if event.Name == kubeletSocketPath && event.Op&fsnotify.Create == fsnotify.Create {
+				klog.Warning("kubelet.sock recreated")
 				time.Sleep(time.Second)
-				log.Fatalf("inotify: %s created, restarting", kubeletSocketPath)
+				klog.Fatalf("%s created, restarting", kubeletSocketPath)
 			}
 		case err := <-watcher.Errors:
-			log.Fatalf("inotify: %s", err)
+			klog.Fatalf("watch kubelet sock error: %s", err)
 		}
 	}
 }

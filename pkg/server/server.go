@@ -110,7 +110,7 @@ func (d *DPServer) RegisterToKubelet() error {
 		ResourceName: d.resourceName,
 	}
 
-	klog.Infof("Register to kubelet with endpoint %s", req.Endpoint)
+	klog.Infof("register to kubelet with endpoint %s", req.Endpoint)
 	if _, err = client.Register(context.Background(), req); err != nil {
 		return err
 	}
