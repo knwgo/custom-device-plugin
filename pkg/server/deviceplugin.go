@@ -2,8 +2,11 @@ package server
 
 import (
 	"context"
+	"path/filepath"
 	"strings"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"k8s.io/klog/v2"
 	pluginapi "k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1"
 )
@@ -24,7 +27,7 @@ func (d *DPServer) ListAndWatch(_ *pluginapi.Empty, server pluginapi.DevicePlugi
 		devs := make([]*pluginapi.Device, len(d.devices))
 		i := 0
 		for _, dev := range d.devices {
-			devs[i] = dev
+			devs[i] = dev.Entity
 			i++
 		}
 		d.m.Unlock()
@@ -59,13 +62,32 @@ func (d *DPServer) GetPreferredAllocation(_ context.Context, request *pluginapi.
 
 func (d *DPServer) Allocate(_ context.Context, request *pluginapi.AllocateRequest) (*pluginapi.AllocateResponse, error) {
 	klog.Info("Allocate called")
+
+	d.m.Lock()
+	defer d.m.Unlock()
+
 	resp := &pluginapi.AllocateResponse{}
 	for _, req := range request.ContainerRequests {
 		klog.Infof("received request: %v", strings.Join(req.DevicesIDs, ","))
+		deviceMount := make([]*pluginapi.Mount, len(req.DevicesIDs))
+		for i, id := range req.DevicesIDs {
+			dev, exist := d.devices[id]
+			if !exist {
+				return nil, status.Errorf(codes.InvalidArgument, "device %s not found", id)
+			}
+			devPath := filepath.Join(d.devicePath, dev.Meta.Filename)
+			deviceMount[i] = &pluginapi.Mount{
+				ContainerPath: devPath,
+				HostPath:      devPath,
+				ReadOnly:      true,
+			}
+		}
+
 		cr := pluginapi.ContainerAllocateResponse{
 			Envs: map[string]string{
 				"CUSTOM_DEVICES": strings.Join(req.DevicesIDs, ","),
 			},
+			Mounts: deviceMount,
 		}
 
 		resp.ContainerResponses = append(resp.ContainerResponses, &cr)

@@ -7,9 +7,10 @@ import (
 	"strconv"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/knwgo/custom-device-plugin/pkg/utils"
 	"k8s.io/klog/v2"
 	pluginapi "k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1"
+
+	"github.com/knwgo/custom-device-plugin/pkg/utils"
 )
 
 func (d *DPServer) list() error {
@@ -21,7 +22,7 @@ func (d *DPServer) list() error {
 	d.m.Lock()
 	defer d.m.Unlock()
 
-	d.devices = make(map[string]*pluginapi.Device)
+	d.devices = make(map[string]utils.Device)
 
 	for _, f := range files {
 		if f.IsDir() {
@@ -60,16 +61,21 @@ func (d *DPServer) list() error {
 			}
 		}
 
-		d.devices[id] = &pluginapi.Device{
-			ID: id,
-			Health: func() string {
-				if dd.Unhealthy {
-					return pluginapi.Unhealthy
-				}
-				return pluginapi.Healthy
-			}(),
-			Topology: &pluginapi.TopologyInfo{
-				Nodes: nn,
+		d.devices[id] = utils.Device{
+			Meta: utils.DeviceMeta{
+				Filename: fi.Name(),
+			},
+			Entity: &pluginapi.Device{
+				ID: id,
+				Health: func() string {
+					if dd.Unhealthy {
+						return pluginapi.Unhealthy
+					}
+					return pluginapi.Healthy
+				}(),
+				Topology: &pluginapi.TopologyInfo{
+					Nodes: nn,
+				},
 			},
 		}
 	}

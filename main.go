@@ -5,9 +5,10 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/knwgo/custom-device-plugin/pkg/server"
 	"k8s.io/klog/v2"
 	pluginapi "k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1"
+
+	"github.com/knwgo/custom-device-plugin/pkg/server"
 )
 
 var (

@@ -10,13 +10,15 @@ import (
 	"google.golang.org/grpc"
 	"k8s.io/klog/v2"
 	pluginapi "k8s.io/kubelet/pkg/apis/deviceplugin/v1beta1"
+
+	"github.com/knwgo/custom-device-plugin/pkg/utils"
 )
 
 const socketName = "custom.sock"
 
 type DPServer struct {
 	srv     *grpc.Server
-	devices map[string]*pluginapi.Device
+	devices map[string]utils.Device
 	m       sync.Mutex
 	watchCh chan struct{}
 
@@ -26,7 +28,7 @@ type DPServer struct {
 func NewDPServer(ksp, dpp, rn, dp string) *DPServer {
 	return &DPServer{
 		srv:     grpc.NewServer(),
-		devices: make(map[string]*pluginapi.Device),
+		devices: make(map[string]utils.Device),
 		m:       sync.Mutex{},
 		watchCh: make(chan struct{}),
 
