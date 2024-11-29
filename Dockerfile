@@ -1,4 +1,7 @@
-FROM golang:1.23.2-alpine3.19 as builder
+FROM golang:1.23.2-alpine3.19 AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
 
 # Set destination for COPY
 WORKDIR /app
@@ -10,7 +13,7 @@ COPY *.go ./
 COPY pkg ./pkg
 
 # Build
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o /custom-device-plugin
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o /custom-device-plugin
 
 FROM alpine:3.19
 COPY --from=builder custom-device-plugin /bin/custom-device-plugin
