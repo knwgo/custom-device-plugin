@@ -120,7 +120,7 @@ func (d *DPServer) RegisterToKubelet() error {
 	return nil
 }
 
-// TOOD: use grpc.NewClient
+// TODO: use grpc.NewClient
 func (d *DPServer) dial(addr string, timeout time.Duration) (*grpc.ClientConn, error) {
 	return grpc.Dial(addr, grpc.WithInsecure(), grpc.WithBlock(),
 		grpc.WithTimeout(timeout),
