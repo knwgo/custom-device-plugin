@@ -25,6 +25,8 @@ spec:
         - name: device-plugin
           image: kaynwong/custom-device-plugin:latest
           imagePullPolicy: IfNotPresent
+#          args:
+#            - --resource-name=nvidia.com/gpu
           resources:
             limits:
               memory: 200Mi

@@ -17,4 +17,4 @@ RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o /custom-device-p
 
 FROM alpine:3.19
 COPY --from=builder custom-device-plugin /bin/custom-device-plugin
-CMD ["/bin/custom-device-plugin"]
+ENTRYPOINT ["/bin/custom-device-plugin"]

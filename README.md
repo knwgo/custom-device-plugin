@@ -38,7 +38,7 @@ Allocatable:
   memory:             8027168Ki
   pods:               110
 ```
-`example.com/foo ` is the default resource name
+`example.com/foo` is the default resource name
 
 ### Advanced Usage
 
