@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/knwgo/custom-device-plugin)](https://goreportcard.com/report/github.com/knwgo/custom-device-plugin)
+
 an example K8s Device Plugin that can customize resource names
 
 ### Basic usage
