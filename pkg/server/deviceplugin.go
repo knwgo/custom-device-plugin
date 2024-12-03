@@ -36,13 +36,9 @@ func (d *DPServer) ListAndWatch(_ *pluginapi.Empty, server pluginapi.DevicePlugi
 		}
 		d.m.Unlock()
 
-		if err := server.Send(&pluginapi.ListAndWatchResponse{
+		return server.Send(&pluginapi.ListAndWatchResponse{
 			Devices: devs,
-		}); err != nil {
-			return err
-		}
-
-		return nil
+		})
 	}
 
 	if err := send(); err != nil {
