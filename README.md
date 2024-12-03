@@ -51,7 +51,9 @@ example: `--resource-name nvidia.com/gpu`
 
 
 #### Device status
-devices can customize Numa Node and Health status, just define the Json content in the device file. for example:
+devices can customize `Numa Node` and `Health` status, just define the `Json` content in the device file 
+
+example dev file content:
 ```json
 {
   "Nodes": [0,1],
