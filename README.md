@@ -1,4 +1,5 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/knwgo/custom-device-plugin)](https://goreportcard.com/report/github.com/knwgo/custom-device-plugin)
+![Static Badge](https://img.shields.io/badge/support_platform-linux%2Famd64%20linux%2Farm64-yellow)
 
 an example K8s Device Plugin that can customize resource names
 
